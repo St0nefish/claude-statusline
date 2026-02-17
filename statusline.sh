@@ -625,7 +625,7 @@ seg_cost() {
     local cost="${COST:-0}"
     local rounded
     rounded=$(printf '%.2f' "$cost" 2>/dev/null) || rounded="$cost"
-    printf '%b%s%b%s%b' "$(c "${COLORS[label]}")" "$CURRENCY" "$(cost_c "$cost")" "$rounded" "$(c reset)"
+    printf '%b%s %b%s%s%b' "$(c "${COLORS[label]}")" "$(label Cst Cost)" "$(cost_c "$cost")" "$CURRENCY" "$rounded" "$(c reset)"
 }
 
 seg_extra() {
