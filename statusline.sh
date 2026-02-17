@@ -622,10 +622,10 @@ seg_weekly() {
 seg_cost() {
     # Hide in subscription mode (have OAuth creds) — cost is only relevant for bedrock/API key
     get_access_token &>/dev/null && return
-    [[ -z "$COST" || "$COST" == "0" || "$COST" == "0.0" || "$COST" == "0.00" ]] && return
+    local cost="${COST:-0}"
     local rounded
-    rounded=$(printf '%.2f' "$COST" 2>/dev/null) || rounded="$COST"
-    printf '%b%s%b%s%b' "$(c "${COLORS[label]}")" "$CURRENCY" "$(cost_c "$COST")" "$rounded" "$(c reset)"
+    rounded=$(printf '%.2f' "$cost" 2>/dev/null) || rounded="$cost"
+    printf '%b%s%b%s%b' "$(c "${COLORS[label]}")" "$CURRENCY" "$(cost_c "$cost")" "$rounded" "$(c reset)"
 }
 
 seg_extra() {
