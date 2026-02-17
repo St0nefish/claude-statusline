@@ -22,13 +22,13 @@
     "git_untracked": "39",
     "git_ahead": "76",
     "git_behind": "196",
-    "label": "dim",
-    "model": "dim",
+    "label": "default",
+    "model": "default",
     "user": "3",
     "user_root": "196",
-    "host": "dim",
+    "host": "default",
     "dir": "31",
-    "reset_time": "dim",
+    "reset_time": "default",
     "cost": "76"
   }
 }

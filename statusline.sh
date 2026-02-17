@@ -22,9 +22,9 @@ declare -A DEFAULT_COLORS=(
     [git_branch_feature]=76 [git_branch_primary]=178
     [git_staged]=178 [git_unstaged]=196 [git_untracked]=39
     [git_ahead]=76 [git_behind]=196
-    [label]=dim [model]=dim [user]=3 [user_root]=196
-    [host]=dim [dir]=31
-    [reset_time]=dim [cost]=76
+    [label]=default [model]=default [user]=3 [user_root]=196
+    [host]=default [dir]=31
+    [reset_time]=default [cost]=76
 )
 
 CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/claude-statusline"
@@ -56,9 +56,10 @@ MODEL="" CTX_PCT="" COST="" CWD="" PROJECT_DIR=""
 c() {
     local code="$1"
     case "$code" in
-        reset) printf '\033[0m' ;;
-        dim)   printf '\033[2m' ;;
-        bold)  printf '\033[1m' ;;
+        default) printf '\033[39m' ;;
+        reset)   printf '\033[0m' ;;
+        dim)     printf '\033[2m' ;;
+        bold)    printf '\033[1m' ;;
         [0-9]|[0-9][0-9]|[0-9][0-9][0-9])
             printf '\033[38;5;%dm' "$code" ;;
         *)     printf '\033[0m' ;;
