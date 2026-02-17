@@ -4,39 +4,44 @@ A pure Bash status line for [Claude Code](https://docs.anthropic.com/en/docs/cla
 
 ## Examples
 
-**Standard** — working at project root, low usage:
-```
-stonefish | my-app | feat/login +2 !1 | Opus 4.6 | Ctx 34% | Ses 12% 4h23m | Wk 8% 4d7h
-─────────   ──────   ──────────────────   ────────   ──────    ─────────────    ──────────
- yellow      blue     green (feature)       dim       green       green           green
+Standard — feature branch, low usage, short labels (default):
+```ansi
+[33mstonefish[0m [2m|[0m [34mmy-app[0m [2m|[0m [32mfeat/login[0m [33m+2[0m [31m!1[0m [34m?3[0m [32m⇡1[0m [2m|[0m [2mOpus 4.6[0m [2m|[0m [2mCtx[0m [32m34%[0m [2m|[0m [2mSes[0m [32m12%[0m [2m4h23m[0m [2m|[0m [2mWk[0m [32m8%[0m [2m4d7h[0m
 ```
 
-**High usage, subdirectory** — Claude has `cd`'d into a subdir, context running out:
-```
-stonefish | my-app/s/components | Opus 4.6 | Ctx 82% | Ses 76% 38m | Wk 54% 2d3h
-─────────   ───────────────────              ───────    ──────────    ──────────
- yellow      yellow (not root)                 red       yellow        yellow
+High usage, subdirectory — context running out, Claude has `cd`'d:
+```ansi
+[33mstonefish[0m [2m|[0m [33mmy-app/s/components[0m [2m|[0m [32mfeat/login[0m [33m+1[0m [2m|[0m [2mOpus 4.6[0m [2m|[0m [2mCtx[0m [31m82%[0m [2m|[0m [2mSes[0m [33m76%[0m [2m38m[0m [2m|[0m [2mWk[0m [33m54%[0m [2m2d3h[0m
 ```
 
-**SSH as root** — remote session, warning colors:
-```
-root@server | my-app | master | Sonnet 4.5 | Ctx 55% | Ses 31% 1h54m | Wk 27% 4d6h
-────────────   ──────   ──────   ──────────   ──────    ─────────────    ──────────
-red  yellow    blue     yellow     dim        yellow        green           green
+Long labels — `label_style: "long"`:
+```ansi
+[33mstonefish[0m [2m|[0m [34mmy-app[0m [2m|[0m [32mfeat/login[0m [33m+2[0m [31m!1[0m [2m|[0m [2mOpus 4.6[0m [2m|[0m [2mContext[0m [32m34%[0m [2m|[0m [2mSession[0m [32m12%[0m [2m4h23m[0m [2m|[0m [2mWeek[0m [32m8%[0m [2m4d7h[0m
 ```
 
-**Bedrock/API mode** — no subscription, shows cost instead of session/weekly:
-```
-stonefish | my-app | main +3 | Haiku 4.5 | Ctx 12% | $4.82
-─────────   ──────   ────────   ─────────   ──────    ─────
- yellow      blue     green       dim        green    green
+On primary branch — yellow warning:
+```ansi
+[33mstonefish[0m [2m|[0m [34mclaude-statusline[0m [2m|[0m [33mmaster[0m [2m|[0m [2mOpus 4.6[0m [2m|[0m [2mCtx[0m [32m21%[0m [2m|[0m [2mSes[0m [32m25%[0m [2m2h48m[0m [2m|[0m [2mWk[0m [32m27%[0m [2m4d7h[0m
 ```
 
-**Extra credits active** — showing used/budget:
+SSH as root — red username, yellow hostname:
+```ansi
+[31mroot[33m@server[0m [2m|[0m [34mmy-app[0m [2m|[0m [33mmaster[0m [33m+3[0m [31m!2[0m [2m|[0m [2mSonnet 4.5[0m [2m|[0m [2mCtx[0m [33m55%[0m [2m|[0m [2mSes[0m [32m31%[0m [2m1h54m[0m [2m|[0m [2mWk[0m [32m27%[0m [2m4d6h[0m
 ```
-stonefish | my-app | Opus 4.6 | Ctx 34% | Ses 12% 4h23m | Wk 8% 4d7h | Ex $3.10/$40.00
-                                                                          ───────────────
-                                                                              green
+
+Bedrock/API mode — no subscription, cost shown instead of session/weekly:
+```ansi
+[33mstonefish[0m [2m|[0m [34mmy-app[0m [2m|[0m [32mmain[0m [32m⇡3[0m [2m|[0m [2mHaiku 4.5[0m [2m|[0m [2mCtx[0m [32m12%[0m [2m|[0m [2m$[0m[32m4.82[0m
+```
+
+Extra credits active — used/budget with long labels:
+```ansi
+[33mstonefish[0m [2m|[0m [34mmy-app[0m [2m|[0m [2mOpus 4.6[0m [2m|[0m [2mContext[0m [32m34%[0m [2m|[0m [2mSession[0m [32m12%[0m [2m4h23m[0m [2m|[0m [2mWeek[0m [32m8%[0m [2m4d7h[0m [2m|[0m [2mExtra[0m [32m$3.10/$40.00[0m
+```
+
+Critical usage — session near limit, high cost:
+```ansi
+[33mstonefish[0m [2m|[0m [34mmy-app[0m [2m|[0m [32mfeat/refactor[0m [33m+12[0m [31m!4[0m [34m?7[0m [2m|[0m [2mOpus 4.6[0m [2m|[0m [2mCtx[0m [31m91%[0m [2m|[0m [2mSes[0m [31m88%[0m [2m14m[0m [2m|[0m [2mWk[0m [33m62%[0m [2m1d19h[0m
 ```
 
 ## Features
