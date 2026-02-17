@@ -137,7 +137,11 @@ All colors are [256-color ANSI codes](https://en.wikipedia.org/wiki/ANSI_escape_
 
 ## How it works
 
-Claude Code pipes JSON on stdin with model info, context window usage, cost, and workspace paths. The script parses this with a single `jq` call, fetches git status (via gitstatusd or `git` CLI with caching), optionally fetches API usage data (with OAuth token from `~/.claude/.credentials.json`), and assembles the configured segments into a colored status line.
+Claude Code pipes JSON on stdin with model info, context window usage, cost, and workspace paths. The script parses this with a single `jq` call, fetches git status (via gitstatusd or `git` CLI with caching), optionally fetches API usage data, and assembles the configured segments into a colored status line.
+
+### OAuth credentials
+
+Session and weekly usage data is fetched from the Anthropic API using the OAuth token in `~/.claude/.credentials.json`. Claude Code manages and refreshes these credentials automatically during normal operation. However, if you leave a session idle long enough for the token to expire, the usage API calls will fail and the session/weekly segments will show `--`. Just send a message — Claude Code will refresh the token and the status line will recover on the next cycle.
 
 ## License
 
