@@ -19,9 +19,10 @@ DEFAULT_CURRENCY="$"
 declare -A DEFAULT_COLORS=(
     [low]=76 [mid]=178 [high]=196
     [separator]=dim
-    [branch_clean]=76 [branch_dirty]=178
-    [staged]=178 [untracked]=39
-    [model]=dim [user]=3 [user_root]=196
+    [git_branch_feature]=76 [git_branch_primary]=178
+    [git_staged]=178 [git_unstaged]=196 [git_untracked]=39
+    [git_ahead]=76 [git_behind]=196
+    [label]=dim [model]=dim [user]=3 [user_root]=196
     [host]=dim [dir]=31
     [reset_time]=dim [cost]=76
 )
@@ -530,20 +531,20 @@ seg_git() {
     local primary_branch branch_color
     primary_branch=$(get_primary_branch "$cwd" 2>/dev/null) || primary_branch=""
     if [[ -n "$primary_branch" && "$branch" == "$primary_branch" ]]; then
-        branch_color="${COLORS[branch_dirty]}"
+        branch_color="${COLORS[git_branch_primary]}"
     else
-        branch_color="${COLORS[branch_clean]}"
+        branch_color="${COLORS[git_branch_feature]}"
     fi
 
     local out=""
     out+="$(c "$branch_color")${branch}$(c reset)"
 
     # Indicators
-    (( staged > 0 ))    && out+=" $(c "${COLORS[staged]}")+${staged}$(c reset)"
-    (( unstaged > 0 ))  && out+=" $(c "${COLORS[high]}")!${unstaged}$(c reset)"
-    (( untracked > 0 )) && out+=" $(c "${COLORS[untracked]}")?${untracked}$(c reset)"
-    (( ahead > 0 ))     && out+=" $(c "${COLORS[low]}")⇡${ahead}$(c reset)"
-    (( behind > 0 ))    && out+=" $(c "${COLORS[high]}")⇣${behind}$(c reset)"
+    (( staged > 0 ))    && out+=" $(c "${COLORS[git_staged]}")+${staged}$(c reset)"
+    (( unstaged > 0 ))  && out+=" $(c "${COLORS[git_unstaged]}")!${unstaged}$(c reset)"
+    (( untracked > 0 )) && out+=" $(c "${COLORS[git_untracked]}")?${untracked}$(c reset)"
+    (( ahead > 0 ))     && out+=" $(c "${COLORS[git_ahead]}")⇡${ahead}$(c reset)"
+    (( behind > 0 ))    && out+=" $(c "${COLORS[git_behind]}")⇣${behind}$(c reset)"
 
     printf '%s' "$out"
 }
@@ -556,7 +557,7 @@ seg_model() {
 seg_context() {
     local pct="${CTX_PCT:-0}"
     pct="${pct%%.*}"
-    printf '%b%s %b%s%%%b' "$(c dim)" "$(label Ctx Context)" "$(usage_c "$pct")" "$pct" "$(c reset)"
+    printf '%b%s %b%s%%%b' "$(c "${COLORS[label]}")" "$(label Ctx Context)" "$(usage_c "$pct")" "$pct" "$(c reset)"
 }
 
 seg_session() {
@@ -570,7 +571,7 @@ seg_session() {
     [[ -z "$util" ]] && return
 
     local out=""
-    out+="$(c dim)$(label Ses Session) $(c reset)"
+    out+="$(c "${COLORS[label]}")$(label Ses Session) $(c reset)"
     out+="$(usage_c "$util")${util}%$(c reset)"
 
     if [[ -n "$resets_at" && "$resets_at" != "null" ]]; then
@@ -595,7 +596,7 @@ seg_weekly() {
     [[ -z "$util" ]] && return
 
     local out=""
-    out+="$(c dim)$(label Wk Week) $(c reset)"
+    out+="$(c "${COLORS[label]}")$(label Wk Week) $(c reset)"
     out+="$(usage_c "$util")${util}%$(c reset)"
 
     if [[ -n "$resets_at" && "$resets_at" != "null" ]]; then
@@ -615,7 +616,7 @@ seg_cost() {
     [[ -z "$COST" || "$COST" == "0" || "$COST" == "0.0" || "$COST" == "0.00" ]] && return
     local rounded
     rounded=$(printf '%.2f' "$COST" 2>/dev/null) || rounded="$COST"
-    printf '%b%s%b%s%b' "$(c dim)" "$CURRENCY" "$(cost_c "$COST")" "$rounded" "$(c reset)"
+    printf '%b%s%b%s%b' "$(c "${COLORS[label]}")" "$CURRENCY" "$(cost_c "$COST")" "$rounded" "$(c reset)"
 }
 
 seg_extra() {
@@ -644,7 +645,7 @@ seg_extra() {
     util=$(echo "$usage" | jq -r '.extra_usage.utilization // 0' 2>/dev/null) || util=0
     local pct="${util%%.*}"
 
-    printf '%b%s %b%s%s/%s%s%b' "$(c dim)" "$(label Ex Extra)" "$(usage_c "$pct")" "$CURRENCY" "$used_d" "$CURRENCY" "$limit_d" "$(c reset)"
+    printf '%b%s %b%s%s/%s%s%b' "$(c "${COLORS[label]}")" "$(label Ex Extra)" "$(usage_c "$pct")" "$CURRENCY" "$used_d" "$CURRENCY" "$limit_d" "$(c reset)"
 }
 
 # ── Main ──────────────────────────────────────────────────────────────────────
