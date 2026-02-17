@@ -4,45 +4,7 @@ A pure Bash status line for [Claude Code](https://docs.anthropic.com/en/docs/cla
 
 ## Examples
 
-Standard — feature branch, low usage, short labels (default):
-```ansi
-[33mstonefish[0m [2m|[0m [34mmy-app[0m [2m|[0m [32mfeat/login[0m [33m+2[0m [31m!1[0m [34m?3[0m [32m⇡1[0m [2m|[0m [2mOpus 4.6[0m [2m|[0m [2mCtx[0m [32m34%[0m [2m|[0m [2mSes[0m [32m12%[0m [2m4h23m[0m [2m|[0m [2mWk[0m [32m8%[0m [2m4d7h[0m
-```
-
-High usage, subdirectory — context running out, Claude has `cd`'d:
-```ansi
-[33mstonefish[0m [2m|[0m [33mmy-app/s/components[0m [2m|[0m [32mfeat/login[0m [33m+1[0m [2m|[0m [2mOpus 4.6[0m [2m|[0m [2mCtx[0m [31m82%[0m [2m|[0m [2mSes[0m [33m76%[0m [2m38m[0m [2m|[0m [2mWk[0m [33m54%[0m [2m2d3h[0m
-```
-
-Long labels — `label_style: "long"`:
-```ansi
-[33mstonefish[0m [2m|[0m [34mmy-app[0m [2m|[0m [32mfeat/login[0m [33m+2[0m [31m!1[0m [2m|[0m [2mOpus 4.6[0m [2m|[0m [2mContext[0m [32m34%[0m [2m|[0m [2mSession[0m [32m12%[0m [2m4h23m[0m [2m|[0m [2mWeek[0m [32m8%[0m [2m4d7h[0m
-```
-
-On primary branch — yellow warning:
-```ansi
-[33mstonefish[0m [2m|[0m [34mclaude-statusline[0m [2m|[0m [33mmaster[0m [2m|[0m [2mOpus 4.6[0m [2m|[0m [2mCtx[0m [32m21%[0m [2m|[0m [2mSes[0m [32m25%[0m [2m2h48m[0m [2m|[0m [2mWk[0m [32m27%[0m [2m4d7h[0m
-```
-
-SSH as root — red username, yellow hostname:
-```ansi
-[31mroot[33m@server[0m [2m|[0m [34mmy-app[0m [2m|[0m [33mmaster[0m [33m+3[0m [31m!2[0m [2m|[0m [2mSonnet 4.5[0m [2m|[0m [2mCtx[0m [33m55%[0m [2m|[0m [2mSes[0m [32m31%[0m [2m1h54m[0m [2m|[0m [2mWk[0m [32m27%[0m [2m4d6h[0m
-```
-
-Bedrock/API mode — no subscription, cost shown instead of session/weekly:
-```ansi
-[33mstonefish[0m [2m|[0m [34mmy-app[0m [2m|[0m [32mmain[0m [32m⇡3[0m [2m|[0m [2mHaiku 4.5[0m [2m|[0m [2mCtx[0m [32m12%[0m [2m|[0m [2m$[0m[32m4.82[0m
-```
-
-Extra credits active — used/budget with long labels:
-```ansi
-[33mstonefish[0m [2m|[0m [34mmy-app[0m [2m|[0m [2mOpus 4.6[0m [2m|[0m [2mContext[0m [32m34%[0m [2m|[0m [2mSession[0m [32m12%[0m [2m4h23m[0m [2m|[0m [2mWeek[0m [32m8%[0m [2m4d7h[0m [2m|[0m [2mExtra[0m [32m$3.10/$40.00[0m
-```
-
-Critical usage — session near limit, high cost:
-```ansi
-[33mstonefish[0m [2m|[0m [34mmy-app[0m [2m|[0m [32mfeat/refactor[0m [33m+12[0m [31m!4[0m [34m?7[0m [2m|[0m [2mOpus 4.6[0m [2m|[0m [2mCtx[0m [31m91%[0m [2m|[0m [2mSes[0m [31m88%[0m [2m14m[0m [2m|[0m [2mWk[0m [33m62%[0m [2m1d19h[0m
-```
+![examples](assets/examples.png)
 
 ## Features
 
