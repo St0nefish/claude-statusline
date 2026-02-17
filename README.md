@@ -2,6 +2,43 @@
 
 A pure Bash status line for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Replaces the Python-based claude-pulse with a single self-contained script — no Python runtime, no pip, no virtualenv.
 
+## Examples
+
+**Standard** — working at project root, low usage:
+```
+stonefish | my-app | feat/login +2 !1 | Opus 4.6 | Ctx 34% | Ses 12% 4h23m | Wk 8% 4d7h
+─────────   ──────   ──────────────────   ────────   ──────    ─────────────    ──────────
+ yellow      blue     green (feature)       dim       green       green           green
+```
+
+**High usage, subdirectory** — Claude has `cd`'d into a subdir, context running out:
+```
+stonefish | my-app/s/components | Opus 4.6 | Ctx 82% | Ses 76% 38m | Wk 54% 2d3h
+─────────   ───────────────────              ───────    ──────────    ──────────
+ yellow      yellow (not root)                 red       yellow        yellow
+```
+
+**SSH as root** — remote session, warning colors:
+```
+root@server | my-app | master | Sonnet 4.5 | Ctx 55% | Ses 31% 1h54m | Wk 27% 4d6h
+────────────   ──────   ──────   ──────────   ──────    ─────────────    ──────────
+red  yellow    blue     yellow     dim        yellow        green           green
+```
+
+**Bedrock/API mode** — no subscription, shows cost instead of session/weekly:
+```
+stonefish | my-app | main +3 | Haiku 4.5 | Ctx 12% | $4.82
+─────────   ──────   ────────   ─────────   ──────    ─────
+ yellow      blue     green       dim        green    green
+```
+
+**Extra credits active** — showing used/budget:
+```
+stonefish | my-app | Opus 4.6 | Ctx 34% | Ses 12% 4h23m | Wk 8% 4d7h | Ex $3.10/$40.00
+                                                                          ───────────────
+                                                                              green
+```
+
 ## Features
 
 - **Configurable segments** — user, directory, git, model, context window, session usage, weekly usage, extra credits, cost
