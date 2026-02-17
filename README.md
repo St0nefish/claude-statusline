@@ -1,6 +1,6 @@
 # claude-statusline
 
-A pure Bash status line for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Replaces the Python-based claude-pulse with a single self-contained script — no Python runtime, no pip, no virtualenv.
+A pure Bash status line for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). 
 
 ## Examples
 
