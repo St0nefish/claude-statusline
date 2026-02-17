@@ -35,7 +35,7 @@ A pure Bash status line for [Claude Code](https://docs.anthropic.com/en/docs/cla
 - `curl`
 - `awk`
 - `git`
-- `gitstatusd` (optional — improves git status performance)
+- [`gitstatusd`](https://github.com/romkatv/gitstatus#installation) (optional — improves git status performance)
 
 ## Install
 
@@ -141,7 +141,7 @@ Claude Code pipes JSON on stdin with model info, context window usage, cost, and
 
 ### OAuth credentials
 
-Session and weekly usage data is fetched from the Anthropic API using the OAuth token in `~/.claude/.credentials.json`. Claude Code manages and refreshes these credentials automatically during normal operation. However, if you leave a session idle long enough for the token to expire, the usage API calls will fail and the session/weekly segments will show `--`. Just send a message — Claude Code will refresh the token and the status line will recover on the next cycle.
+Session and weekly usage data is fetched from the Anthropic API using OAuth credentials managed by Claude Code. On macOS, credentials are read from the system Keychain; on Linux, from `~/.claude/.credentials.json`. Claude Code refreshes these automatically during normal operation. However, if you leave a session idle long enough for the token to expire, the usage API calls will fail and the session/weekly segments will show `--`. Just send a message — Claude Code will refresh the token and the status line will recover on the next cycle.
 
 ## License
 

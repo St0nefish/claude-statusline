@@ -33,6 +33,7 @@ CONFIG_FILE="$CONFIG_DIR/config.json"
 CREDS_FILE="$HOME/.claude/.credentials.json"
 USAGE_CACHE="$CACHE_DIR/usage.json"
 GIT_CACHE="$CACHE_DIR/git.cache"
+PLATFORM=$(uname -s | tr '[:upper:]' '[:lower:]')  # "darwin" or "linux"
 
 # Populated by load_config / read_stdin
 SEGMENTS=()
@@ -229,7 +230,11 @@ secs_until_reset() {
     local iso="$1"
     [[ -z "$iso" || "$iso" == "null" ]] && { echo 0; return; }
     local target now
-    target=$(date -d "$iso" +%s 2>/dev/null) || { echo 0; return; }
+    if [[ "$PLATFORM" == "darwin" ]]; then
+        target=$(date -j -f "%Y-%m-%dT%H:%M:%S" "${iso%%.*}" +%s 2>/dev/null) || { echo 0; return; }
+    else
+        target=$(date -d "$iso" +%s 2>/dev/null) || { echo 0; return; }
+    fi
     now=$(date +%s)
     echo $(( target - now ))
 }
@@ -238,7 +243,11 @@ file_age() {
     local file="$1"
     [[ -f "$file" ]] || { echo 999999; return; }
     local mtime now
-    mtime=$(stat -c %Y "$file" 2>/dev/null) || { echo 999999; return; }
+    if [[ "$PLATFORM" == "darwin" ]]; then
+        mtime=$(stat -f %m "$file" 2>/dev/null) || { echo 999999; return; }
+    else
+        mtime=$(stat -c %Y "$file" 2>/dev/null) || { echo 999999; return; }
+    fi
     now=$(date +%s)
     echo $(( now - mtime ))
 }
@@ -246,15 +255,9 @@ file_age() {
 # ── gitstatusd ────────────────────────────────────────────────────────────────
 
 find_gitstatusd() {
-    local platform arch
-    platform=$(uname -s | tr '[:upper:]' '[:lower:]')
+    local arch
     arch=$(uname -m)
-    case "$arch" in
-        x86_64)  arch="x86_64" ;;
-        aarch64) arch="aarch64" ;;
-        arm64)   arch="aarch64" ;;
-    esac
-    local bin="$HOME/.cache/gitstatus/gitstatusd-${platform}-${arch}"
+    local bin="$HOME/.cache/gitstatus/gitstatusd-${PLATFORM}-${arch}"
     [[ -x "$bin" ]] && { echo "$bin"; return 0; }
     return 1
 }
@@ -421,9 +424,14 @@ get_git_status() {
 # ── API ───────────────────────────────────────────────────────────────────────
 
 get_access_token() {
-    [[ -f "$CREDS_FILE" ]] || return 1
-    local token
-    token=$(jq -r '.claudeAiOauth.accessToken // empty' "$CREDS_FILE" 2>/dev/null) || return 1
+    local token=""
+    if [[ "$PLATFORM" == "darwin" ]]; then
+        token=$(security find-generic-password -s "Claude Code-credentials" -w 2>/dev/null \
+            | jq -r '.claudeAiOauth.accessToken // empty' 2>/dev/null) || true
+    else
+        [[ -f "$CREDS_FILE" ]] || return 1
+        token=$(jq -r '.claudeAiOauth.accessToken // empty' "$CREDS_FILE" 2>/dev/null) || true
+    fi
     [[ -n "$token" ]] || return 1
     echo "$token"
 }
