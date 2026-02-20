@@ -13,6 +13,7 @@ DEFAULT_GIT_BACKEND="auto"
 DEFAULT_LABEL_STYLE="short"
 DEFAULT_COST_THRESHOLDS=(5 20)
 DEFAULT_EXTRA_HIDE_ZERO=true
+DEFAULT_EXTRA_ONLY_BURNING=false
 DEFAULT_CURRENCY="$"
 
 # Default colors (256-color codes or keywords)
@@ -46,6 +47,7 @@ GIT_BACKEND=""
 LABEL_STYLE=""
 COST_THRESHOLDS=()
 EXTRA_HIDE_ZERO=true
+EXTRA_ONLY_BURNING=false
 CURRENCY=""
 declare -A COLORS=()
 
@@ -141,6 +143,7 @@ load_config() {
         v=$(echo "$cfg" | jq -r '.git_backend // empty' 2>/dev/null) && [[ -n "$v" ]] && GIT_BACKEND="$v"
         v=$(echo "$cfg" | jq -r '.label_style // empty' 2>/dev/null) && [[ -n "$v" ]] && LABEL_STYLE="$v"
         v=$(echo "$cfg" | jq -r '.extra_hide_zero // empty' 2>/dev/null) && [[ -n "$v" ]] && EXTRA_HIDE_ZERO="$v"
+        v=$(echo "$cfg" | jq -r '.extra_only_burning // empty' 2>/dev/null) && [[ -n "$v" ]] && EXTRA_ONLY_BURNING="$v"
         v=$(echo "$cfg" | jq -r '.currency // empty' 2>/dev/null) && [[ -n "$v" ]] && CURRENCY="$v"
         local ct
         ct=$(echo "$cfg" | jq -r '.cost_thresholds // empty | .[]' 2>/dev/null) || true
@@ -648,6 +651,18 @@ seg_extra() {
     # Hide if zero and flag set
     if [[ "$EXTRA_HIDE_ZERO" == "true" && "$used_d" == "0.00" ]]; then
         return
+    fi
+
+    # Only show when actively burning extra (session or weekly at 100%)
+    if [[ "$EXTRA_ONLY_BURNING" == "true" ]]; then
+        local ses_util wk_util
+        ses_util=$(echo "$usage" | jq -r '.five_hour.utilization // 0' 2>/dev/null) || ses_util=0
+        wk_util=$(echo "$usage" | jq -r '.seven_day.utilization // 0' 2>/dev/null) || wk_util=0
+        ses_util="${ses_util%%.*}"
+        wk_util="${wk_util%%.*}"
+        if (( ses_util < 100 && wk_util < 100 )); then
+            return
+        fi
     fi
 
     local util
